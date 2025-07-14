@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "7D5Z1YLYvjY=",
+  "success": true,
+  "projectFilePath": "/Users/adamkosovic/Desktop/TestPraktik/TestPraktik.csproj",
+  "expectedPackageFiles": [
+    "/Users/adamkosovic/.nuget/packages/microsoft.aspnetcore.openapi/9.0.1/microsoft.aspnetcore.openapi.9.0.1.nupkg.sha512",
+    "/Users/adamkosovic/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
