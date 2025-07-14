@@ -6,14 +6,18 @@ using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddDbContext<BookDbContext>(
+            options => options.UseNpgsql("Host=localhost;Database=bookappdb;Username=postgres;Password=password"));
         builder.Services.AddControllers();
-        builder.Services.AddSingleton<BookService, BookService>();
+        builder.Services.AddScoped<BookService>();
 
         var app = builder.Build();
 
@@ -27,8 +31,6 @@ public class Program
 
 public class Book
 {
-
-    private static int ID_Counter = 0;
     public int Id { get; set; }
     public string Title { get; set; }
     public string Author { get; set; }
@@ -38,8 +40,16 @@ public class Book
     {
         this.Title = title;
         this.Author = author;
-        this.PublishDate = publishDate;
-        this.Id = ID_Counter++;
+        this.PublishDate = DateTime.SpecifyKind(publishDate, DateTimeKind.Utc);
+    }
+}
+
+public class BookDbContext : DbContext
+{
+    public DbSet<Book> Books { get; set; }
+
+    public BookDbContext(DbContextOptions<BookDbContext> options) : base(options)
+    {
     }
 }
 
@@ -127,7 +137,7 @@ public class BookController : ControllerBase
 
 
     [HttpGet("books")]
-    public List<BookDto> GetAllBooks()  
+    public List<BookDto> GetAllBooks()
     {
         return bookService.GetAllBooks().Select(book => new BookDto(book)).ToList();
     }
@@ -136,7 +146,13 @@ public class BookController : ControllerBase
 
 public class BookService
 {
-    private List<Book> books = new List<Book>();
+    private BookDbContext context;
+
+    public BookService(BookDbContext context)
+    {
+        this.context = context;
+    }
+
     public Book CreateBook(string title, string author, DateTime publishDate)
     {
 
@@ -154,40 +170,43 @@ public class BookService
         }
 
         Book book = new Book(title, author, publishDate);
-        books.Add(book);
+        context.Books.Add(book);
+        context.SaveChanges();
         return book;
     }
 
     public Book? RemoveBook(int id)
     {
-        for (int i = 0; i < books.Count; i++)
+        Book? book = context.Books.Find(id);
+        if (book == null)
         {
-            if (books[i].Id == id)
-            {
-                Book book = books[i];
-                books.RemoveAt(i);
-                return book;
-            }
+            return null;
         }
-        return null;
-    }
-
-
-    public List<Book> GetAllBooks()
-    {
-        return books;
+        context.Books.Remove(book);
+        context.SaveChanges();
+        return book;
     }
 
     public Book? UpdateBook(int id, CreateBookDto dto)
     {
-        var book = books.FirstOrDefault(b => b.Id == id);
+        var book = context.Books.Find(id);
         if (book == null)
+        {
             return null;
+        }
 
         book.Title = dto.Title;
         book.Author = dto.Author;
-        book.PublishDate = dto.PublishDate;
+        book.PublishDate = DateTime.SpecifyKind(dto.PublishDate, DateTimeKind.Utc);
 
+        context.SaveChanges();
         return book;
+    }
+
+
+
+       public List<Book> GetAllBooks()
+    {
+        return context.Books.ToList();
     }
 }
