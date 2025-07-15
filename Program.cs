@@ -81,6 +81,8 @@ public class Book
     public string Title { get; set; }
     public string Author { get; set; }
     public DateTime PublishDate { get; set; }
+
+    public string UserId { get; set; }
     public User User { get; set; }
 
     public Book() { }
@@ -91,6 +93,7 @@ public class Book
         this.Author = author;
         this.PublishDate = DateTime.SpecifyKind(publishDate, DateTimeKind.Utc);
         this.User = user;
+        this.UserId = user.Id;
     }
 }
 
@@ -168,13 +171,15 @@ public class BookController : ControllerBase
     [Authorize("remove_book")]
     public IActionResult RemoveBook(int id)
     {
-        Book? book = bookService.RemoveBook(id);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Book? book = bookService.RemoveBook(id, userId);
         if (book == null)
         {
             return NotFound();
         }
 
-        return Ok(book);
+        BookDto bookDto = new BookDto(book);
+        return Ok(bookDto);
     }
 
 
@@ -182,13 +187,20 @@ public class BookController : ControllerBase
     [Authorize("update_book")]
     public IActionResult UpdateBook(int id, [FromBody] CreateBookDto dto)
     {
-        Book? book = bookService.UpdateBook(id, dto);
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null)
+        {
+            return NotFound();
+        }
+
+        Book? book = bookService.UpdateBook(id, dto, userId);
         if (book == null)
         {
             return NotFound();
         }
 
-        return Ok(new BookDto(book));
+        BookDto bookDto = new BookDto(book);
+        return Ok(bookDto);
     }
 
 
@@ -196,7 +208,8 @@ public class BookController : ControllerBase
     [Authorize("get_books")]
     public List<BookDto> GetAllBooks()
     {
-        return bookService.GetAllBooks().Select(book => new BookDto(book)).ToList();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return bookService.GetAllBooks(userId).Select(book => new BookDto(book)).ToList();
     }
 }
 
@@ -239,26 +252,44 @@ public class BookService
         return book;
     }
 
-    public Book? RemoveBook(int id)
+    public Book? RemoveBook(int id, string userId)
     {
-        Book? book = context.Books.Find(id);
-        if (book == null)
+
+        User? user = context.Users.Find(userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+
+        List<Book> books = context.Books.Where(book => book.User.Id == userId && book.Id == id).ToList();
+        if (books.Count == 0)
         {
             return null;
         }
+
+        Book book = books[0];
+
         context.Books.Remove(book);
         context.SaveChanges();
+
         return book;
     }
 
-    public Book? UpdateBook(int id, CreateBookDto dto)
+    public Book? UpdateBook(int id, CreateBookDto dto, string userId)
     {
-        var book = context.Books.Find(id);
-        if (book == null)
+        User? user = context.Users.Find(userId);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+
+        List<Book> books = context.Books.Where(book => book.User.Id == userId && book.Id == id).ToList();
+        if (books.Count == 0)
         {
             return null;
         }
 
+        Book book = books[0];
         book.Title = dto.Title;
         book.Author = dto.Author;
         book.PublishDate = DateTime.SpecifyKind(dto.PublishDate, DateTimeKind.Utc);
@@ -269,8 +300,10 @@ public class BookService
 
 
 
-    public List<Book> GetAllBooks()
+    public List<Book> GetAllBooks(string userId)
     {
-        return context.Books.ToList();
+        return context.Books
+        .Where(book => book.User.Id == userId)
+        .ToList();
     }
 }
