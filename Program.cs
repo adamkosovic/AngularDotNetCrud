@@ -14,32 +14,25 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                policy =>
+                {
+                    policy
+                        .WithOrigins("http://localhost:4200") 
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials(); 
+                });
+        });
+
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy(
-                "create_book",
-                 policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                });
-            options.AddPolicy(
-            "remove_book",
-             policy =>
-            {
-                policy.RequireAuthenticatedUser();
-            });
-            options.AddPolicy(
-            "update_book",
-             policy =>
-            {
-                policy.RequireAuthenticatedUser();
-            });
-            options.AddPolicy(
-            "get_books",
-             policy =>
-            {
-                policy.RequireAuthenticatedUser();
-            });
+            options.AddPolicy("create_book", policy => policy.RequireAuthenticatedUser());
+            options.AddPolicy("remove_book", policy => policy.RequireAuthenticatedUser());
+            options.AddPolicy("update_book", policy => policy.RequireAuthenticatedUser());
+            options.AddPolicy("get_books", policy => policy.RequireAuthenticatedUser());
         });
 
         builder.Services.AddDbContext<BookDbContext>(
@@ -56,6 +49,8 @@ public class Program
         builder.Services.AddScoped<BookService, BookService>();
 
         var app = builder.Build();
+
+        app.UseCors("AllowFrontend");
 
         app.MapIdentityApi<User>();
         app.MapControllers();
@@ -205,7 +200,7 @@ public class BookController : ControllerBase
 
 
     [HttpGet("books")]
-    [Authorize("get_books")]
+   // [Authorize("get_books")]
     public List<BookDto> GetAllBooks()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

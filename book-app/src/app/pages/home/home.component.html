@@ -1,0 +1,18 @@
+<h2 class="my-4">Böcker</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Titel</th>
+      <th>Författare</th>
+      <th>Publiceringsdatum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let book of books">
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>{{ book.publishDate | date }}</td>
+    </tr>
+  </tbody>
+</table>

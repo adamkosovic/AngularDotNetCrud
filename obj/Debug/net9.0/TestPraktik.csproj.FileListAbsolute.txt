@@ -135,3 +135,9 @@
 /Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 /Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.Extensions.Identity.Core.dll
 /Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.Extensions.Identity.Stores.dll
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/angular.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/package-lock.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/package.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/tsconfig.app.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/tsconfig.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/book-app/tsconfig.spec.json
