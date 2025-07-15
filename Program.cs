@@ -1,12 +1,12 @@
 
 namespace TestPraktik;
 
-using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 public class Program
 {
@@ -14,18 +14,64 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy(
+                "create_book",
+                 policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                });
+            options.AddPolicy(
+            "remove_book",
+             policy =>
+            {
+                policy.RequireAuthenticatedUser();
+            });
+            options.AddPolicy(
+            "update_book",
+             policy =>
+            {
+                policy.RequireAuthenticatedUser();
+            });
+            options.AddPolicy(
+            "get_books",
+             policy =>
+            {
+                policy.RequireAuthenticatedUser();
+            });
+        });
+
         builder.Services.AddDbContext<BookDbContext>(
-            options => options.UseNpgsql("Host=localhost;Database=bookappdb;Username=postgres;Password=password"));
+            options => options.UseNpgsql("Host=localhost;Database=bookappdb;Username=postgres;Password=password"
+            )
+        );
+
+        builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+        builder
+            .Services.AddIdentityCore<User>()
+            .AddEntityFrameworkStores<BookDbContext>()
+            .AddApiEndpoints();
         builder.Services.AddControllers();
-        builder.Services.AddScoped<BookService>();
+        builder.Services.AddScoped<BookService, BookService>();
 
         var app = builder.Build();
 
+        app.MapIdentityApi<User>();
         app.MapControllers();
         app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.Run();
     }
+}
+
+public class User : IdentityUser
+{
+    public List<Book> Books { get; set; }
+
+    public User() { }
 }
 
 
@@ -35,16 +81,20 @@ public class Book
     public string Title { get; set; }
     public string Author { get; set; }
     public DateTime PublishDate { get; set; }
+    public User User { get; set; }
 
-    public Book(string title, string author, DateTime publishDate)
+    public Book() { }
+
+    public Book(string title, string author, DateTime publishDate, User user)
     {
         this.Title = title;
         this.Author = author;
         this.PublishDate = DateTime.SpecifyKind(publishDate, DateTimeKind.Utc);
+        this.User = user;
     }
 }
 
-public class BookDbContext : DbContext
+public class BookDbContext : IdentityDbContext<User>
 {
     public DbSet<Book> Books { get; set; }
 
@@ -96,12 +146,16 @@ public class BookController : ControllerBase
 
 
     [HttpPost("book")]
+    [Authorize("create_book")]
     public IActionResult CreateBook([FromBody] CreateBookDto dto)
     {
         try
         {
-            Book book = bookService.CreateBook(dto.Title, dto.Author, dto.PublishDate);
-            return Ok(book);
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Book book = bookService.CreateBook(dto.Title, dto.Author, dto.PublishDate, id);
+
+            BookDto bookDto = new BookDto(book);
+            return Ok(bookDto);
         }
         catch (ArgumentException)
         {
@@ -111,6 +165,7 @@ public class BookController : ControllerBase
 
 
     [HttpDelete("book/{id}")]
+    [Authorize("remove_book")]
     public IActionResult RemoveBook(int id)
     {
         Book? book = bookService.RemoveBook(id);
@@ -124,6 +179,7 @@ public class BookController : ControllerBase
 
 
     [HttpPut("book/{id}")]
+    [Authorize("update_book")]
     public IActionResult UpdateBook(int id, [FromBody] CreateBookDto dto)
     {
         Book? book = bookService.UpdateBook(id, dto);
@@ -137,6 +193,7 @@ public class BookController : ControllerBase
 
 
     [HttpGet("books")]
+    [Authorize("get_books")]
     public List<BookDto> GetAllBooks()
     {
         return bookService.GetAllBooks().Select(book => new BookDto(book)).ToList();
@@ -153,7 +210,7 @@ public class BookService
         this.context = context;
     }
 
-    public Book CreateBook(string title, string author, DateTime publishDate)
+    public Book CreateBook(string title, string author, DateTime publishDate, string id)
     {
 
         if (string.IsNullOrWhiteSpace(title))
@@ -169,8 +226,15 @@ public class BookService
             throw new ArgumentException("Publish date must be in the past");
         }
 
-        Book book = new Book(title, author, publishDate);
+        User? user = context.Users.Find(id);
+        if (user == null)
+        {
+            throw new ArgumentException("User not found");
+        }
+
+        Book book = new Book(title, author, publishDate, user);
         context.Books.Add(book);
+        user.Books.Add(book);
         context.SaveChanges();
         return book;
     }
@@ -205,7 +269,7 @@ public class BookService
 
 
 
-       public List<Book> GetAllBooks()
+    public List<Book> GetAllBooks()
     {
         return context.Books.ToList();
     }

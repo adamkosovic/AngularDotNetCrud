@@ -130,3 +130,8 @@
 /Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 /Users/adamkosovic/Desktop/TestPraktik/obj/Debug/net9.0/TestPraktik.sourcelink.json
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.AspNetCore.Cryptography.Internal.dll
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.Extensions.Identity.Core.dll
+/Users/adamkosovic/Desktop/TestPraktik/bin/Debug/net9.0/Microsoft.Extensions.Identity.Stores.dll
