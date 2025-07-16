@@ -1,5 +1,30 @@
-<h1>Navbar</h1>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" routerLink="/">📚 BookApp</a>
 
-<a routerLink="/">Hem</a> |
-<a routerLink="/login">Logga in</a> |
-<a routerLink="/quotes">Mina citat</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Hem</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/quotes">Mina citat</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="!auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/login">Logga in</a>
+        </li>
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" (click)="logout()">Logga ut</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+

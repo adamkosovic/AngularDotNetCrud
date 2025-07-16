@@ -1,8 +1,7 @@
-
 <div class="container mt-4">
-  <h2>Lägg till ny bok</h2>
+  <h2>{{ editing ? "Redigera bok" : "Lägg till ny bok" }}</h2>
 
-  <form (ngSubmit)="onSubmit()" #bookForm="ngForm">
+  <form #bookForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label for="title" class="form-label">Titel</label>
       <input
@@ -28,10 +27,10 @@
     </div>
 
     <div class="mb-3">
-      <label for="date" class="form-label">Publiceringsdatum</label>
+      <label for="publishDate" class="form-label">Publiceringsdatum</label>
       <input
         type="date"
-        id="date"
+        id="publishDate"
         class="form-control"
         [(ngModel)]="book.publishDate"
         name="publishDate"
@@ -39,8 +38,13 @@
       />
     </div>
 
-    <button class="btn btn-success" type="submit" [disabled]="!bookForm.form.valid">
-      <i class="fa fa-plus"></i> Lägg till bok
+    <button
+      class="btn btn-success"
+      type="submit"
+      [disabled]="!bookForm.form.valid"
+    >
+      <i class="fa" [ngClass]="editing ? 'fa-save' : 'fa-plus'"></i>
+      {{ editing ? "Uppdatera bok" : "Lägg till bok" }}
     </button>
   </form>
 </div>

@@ -11,6 +11,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'quotes', component: QuoteComponent /*, canActivate: [AuthGuard] */ },
   { path: 'book-form', component: BookFormComponent /*, canActivate: [AuthGuard] */ },
+  { path: 'book-form/:id', component: BookFormComponent /*, canActivate: [AuthGuard] */ },
   { path: '**', redirectTo: '' },
 ];
 
