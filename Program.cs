@@ -200,7 +200,7 @@ public class BookController : ControllerBase
 
 
     [HttpGet("books")]
-   // [Authorize("get_books")]
+   [Authorize("get_books")]
     public List<BookDto> GetAllBooks()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

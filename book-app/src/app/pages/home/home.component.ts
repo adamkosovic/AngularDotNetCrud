@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../models/book.model';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,12 +14,30 @@ import { CommonModule } from '@angular/common';
 
 export class HomeComponent implements OnInit {
   books: Book[] = [];
-  constructor(private bookService: BookService) {}
+
+  constructor(private bookService: BookService, private router: Router) {}
+
+  navigateToCreate() {
+    this.router.navigate(['/book-form']);
+  }
 
   ngOnInit(): void {
     this.bookService.getAllBooks().subscribe({
-      next: books => console.log('✅ Fick böcker:', books),
-      error: err => console.error('❌ Kunde inte hämta böcker:', err)
+      next: books => this.books = books,
+      error: err => console.error('Kunde inte hämta böcker:', err)
+    });
+  }
+
+  OnEdit(book: Book) {
+    console.log('Redigera', book);
+  }
+
+  OnDelete(id: number) {
+    this.bookService.removeBook(id).subscribe({
+      next: () => {
+        this.books = this.books.filter(book => book.id !== id);
+      },
+      error: err => console.error('Kunde inte ta bort bok:', err)
     });
   }
 }

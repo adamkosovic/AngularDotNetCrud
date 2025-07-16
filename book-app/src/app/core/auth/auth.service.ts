@@ -7,9 +7,21 @@ import { tap } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:5020/api'; 
+  private apiUrl = 'http://localhost:5020'; 
 
   constructor(private http: HttpClient) {}
+
+  getUserInfo(): any | null {
+    const token = this.getToken();
+    if (!token) return null;
+  
+    const payload = token.split('.')[1];
+    try {
+      return JSON.parse(atob(payload)); 
+    } catch {
+      return null;
+    }
+  }
 
   login(credentials: { email: string, password: string }) {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
