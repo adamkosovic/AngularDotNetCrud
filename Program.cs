@@ -38,6 +38,8 @@ public class Program
         var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ??
             "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
 
+        Console.WriteLine($"Using connection string: {connectionString}");
+
         builder.Services.AddDbContext<BookDbContext>(options =>
             options.UseNpgsql(connectionString)
         );
@@ -82,27 +84,55 @@ public class Program
 
         app.MapPost("/register", async (UserManager<User> userManager, RegisterRequest req) =>
         {
-            var user = new User
+            try
             {
-                Email = req.Email,
-                UserName = req.Email
-            };
+                Console.WriteLine($"Registering user: {req.Email}");
 
-            var result = await userManager.CreateAsync(user, req.Password);
-            if (!result.Succeeded)
-                return Results.BadRequest(result.Errors);
+                var user = new User
+                {
+                    Email = req.Email,
+                    UserName = req.Email
+                };
 
-            return Results.Ok();
+                var result = await userManager.CreateAsync(user, req.Password);
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine($"Registration failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    return Results.BadRequest(result.Errors);
+                }
+
+                Console.WriteLine($"User registered successfully: {req.Email}");
+                return Results.Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in register: {ex.Message}");
+                return Results.Problem(ex.Message);
+            }
         })
         .RequireCors("AllowFrontend");
 
         app.MapPost("/login", async (SignInManager<User> signInManager, LoginRequest req) =>
         {
-            var result = await signInManager.PasswordSignInAsync(req.Email, req.Password, false, false);
-            if (!result.Succeeded)
-                return Results.BadRequest("Invalid email or password");
+            try
+            {
+                Console.WriteLine($"Login attempt for: {req.Email}");
 
-            return Results.Ok();
+                var result = await signInManager.PasswordSignInAsync(req.Email, req.Password, false, false);
+                if (!result.Succeeded)
+                {
+                    Console.WriteLine($"Login failed for: {req.Email}");
+                    return Results.BadRequest("Invalid email or password");
+                }
+
+                Console.WriteLine($"Login successful for: {req.Email}");
+                return Results.Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception in login: {ex.Message}");
+                return Results.Problem(ex.Message);
+            }
         })
         .RequireCors("AllowFrontend");
 
