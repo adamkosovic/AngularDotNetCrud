@@ -62,11 +62,12 @@ public class Program
 
         app.UseCors("AllowFrontend");
 
-        app.MapIdentityApi<User>();
-        app.MapControllers();
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.MapIdentityApi<User>();
+        app.MapControllers();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
