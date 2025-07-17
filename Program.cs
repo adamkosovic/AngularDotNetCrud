@@ -1,15 +1,11 @@
-
 namespace TestPraktik;
-
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
 using TestPraktik.Models;
 using TestPraktik.Dtos;
 using TestPraktik.Data;
 using BookApp.Services;
-
 
 public class Program
 {
@@ -19,18 +15,17 @@ public class Program
 
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowFrontend",
-                policy =>
-                {
-                    policy
-                        .WithOrigins(
-                            "http://localhost:4200",
-                            "https://chic-platypus-fd77db.netlify.app"
-                        )
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials();
-                });
+            options.AddPolicy("AllowFrontend", policy =>
+            {
+                policy
+                    .WithOrigins(
+                        "https://rad-strudel-8320dd.netlify.app",
+                        "http://localhost:4200"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
+            });
         });
 
         builder.Services.AddAuthorization(options =>
@@ -41,20 +36,19 @@ public class Program
             options.AddPolicy("get_books", policy => policy.RequireAuthenticatedUser());
         });
 
-        // Get database connection string from environment variables
         var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ??
             "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
 
-        builder.Services.AddDbContext<BookDbContext>(
-            options => options.UseNpgsql(connectionString)
+        builder.Services.AddDbContext<BookDbContext>(options =>
+            options.UseNpgsql(connectionString)
         );
 
         builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
-        builder
-            .Services.AddIdentityCore<User>()
+        builder.Services.AddIdentityCore<User>()
             .AddEntityFrameworkStores<BookDbContext>()
             .AddSignInManager()
             .AddApiEndpoints();
+
         builder.Services.AddControllers();
         builder.Services.AddScoped<BookService>();
 
@@ -67,15 +61,13 @@ public class Program
         app.UseAuthorization();
 
         app.MapIdentityApi<User>();
+
         app.MapControllers();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
-
         app.MapFallbackToFile("index.html");
-
 
         app.Run();
     }
 }
-

@@ -137,7 +137,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowNetlify",
         policy => policy
-            .WithOrigins("https://your-app.netlify.app")
+         dotnet publish -c Release
+      .WithOrigins("https://rad-strudel-8320dd.netlify.app")
             .AllowAnyHeader()
             .AllowAnyMethod());
 });

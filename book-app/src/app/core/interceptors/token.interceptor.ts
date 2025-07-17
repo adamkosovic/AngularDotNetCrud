@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
@@ -15,17 +14,20 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
-
     if (token) {
       const cloned = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        withCredentials: true
       });
       return next.handle(cloned);
     }
+    const cloned = req.clone({
+      withCredentials: true
+    });
 
-    return next.handle(req);
+    return next.handle(cloned);
   }
 }
 
