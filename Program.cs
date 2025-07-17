@@ -165,9 +165,10 @@ public class Program
 
         app.MapControllers();
 
-        app.UseDefaultFiles();
-        app.UseStaticFiles();
-        app.MapFallbackToFile("index.html");
+        // Remove static file serving since frontend is on Netlify
+        // app.UseDefaultFiles();
+        // app.UseStaticFiles();
+        // app.MapFallbackToFile("index.html");
 
         app.Run();
     }
