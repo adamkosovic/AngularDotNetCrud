@@ -1,5 +1,5 @@
 
-namespace BookApp.Services;
+namespace TestPraktik.Services;
 
 using TestPraktik.Models;
 using TestPraktik.Data;

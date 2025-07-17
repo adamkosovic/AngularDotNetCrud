@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/book-app/browser"
+  publish = "dist/book-app"
   command = "npm run build"
 
 [build.environment]
