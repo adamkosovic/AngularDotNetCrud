@@ -3,6 +3,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,8 @@ export class NavbarComponent {
 
   constructor(
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    private notify: NotificationService
   ) {}
 
   toggleTheme() {
@@ -37,6 +39,7 @@ export class NavbarComponent {
 
   logout() {
     this.auth.logout();
+    this.notify.show('Utloggning lyckades', 'success');
     this.router.navigate(['/login']);
   }
 }

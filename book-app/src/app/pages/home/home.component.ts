@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { BookService } from '../../services/book.service';
+import { BookService } from '../../services/book/book.service';
 import { Book } from '../../models/book.model';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { BookFormComponent } from '../book-form/book-form.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { NotificationService } from '../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +11,14 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterModule]
 })
-
-
 export class HomeComponent implements OnInit {
   books: Book[] = [];
 
-  constructor(private bookService: BookService, private router: Router) {}
+  constructor(
+    private bookService: BookService,
+    private router: Router,
+    private notify: NotificationService 
+  ) {}
 
   navigateToCreate() {
     this.router.navigate(['/book-form']);
@@ -38,9 +39,14 @@ export class HomeComponent implements OnInit {
     this.bookService.removeBook(id).subscribe({
       next: () => {
         this.books = this.books.filter(book => book.id !== id);
+        this.notify.show('Bok raderad', 'danger');
       },
-      error: err => console.error('Kunde inte ta bort bok:', err)
+      error: err => {
+        console.error('Kunde inte ta bort bok:', err);
+        this.notify.show('Kunde inte ta bort bok', 'danger');
+      }
     });
   }
 }
+
 
