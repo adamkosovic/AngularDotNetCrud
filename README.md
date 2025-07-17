@@ -100,6 +100,32 @@ options.UseNpgsql("Host=localhost;Database=bookappdb;Username=postgres;Password=
 4. **Toggle Dark Mode** using the theme button in the navbar
 5. **Edit/Delete** your books and quotes as needed
 
+## 🌐 Deployment
+
+### Frontend (Netlify)
+
+The Angular frontend can be deployed to Netlify for free hosting with automatic deployments.
+
+📖 **See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions**
+
+Quick deployment:
+
+```bash
+# Build for production
+cd bin/Debug/net9.0/book-app
+npm run build
+
+# Deploy to Netlify (drag dist/book-app folder to netlify.com)
+```
+
+### Backend (Azure/Railway/Heroku)
+
+Deploy your .NET backend to your preferred hosting service:
+
+- **Azure App Service** - Microsoft's cloud platform
+- **Railway** - Simple deployment with database
+- **Heroku** - Popular cloud platform
+
 ## 🔧 Development
 
 ### Adding New Features
