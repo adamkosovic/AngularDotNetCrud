@@ -1,5 +1,10 @@
-<div class="container mt-5" style="max-width: 400px;">
+<div class="container mt-5" style="max-width: 400px">
   <h2 class="text-center mb-4">Logga in</h2>
+
+  <div class="alert alert-info text-center" role="alert">
+    Logga in för att få tillgång till alla funktioner – som din egna
+    <strong>boklista</strong> och <strong>citat</strong>.
+  </div>
 
   <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
     <div class="mb-3">
@@ -31,7 +36,7 @@
       class="btn btn-primary w-100"
       [disabled]="!loginForm.valid"
     >
-      Logga in
+      <i class="fa fa-sign-in me-2"></i> Logga in
     </button>
   </form>
 
@@ -41,4 +46,3 @@
     </a>
   </div>
 </div>
-
