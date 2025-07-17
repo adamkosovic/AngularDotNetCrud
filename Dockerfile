@@ -2,7 +2,7 @@
   FROM node:18-alpine AS frontend-build
 
   WORKDIR /app/frontend
-  COPY frontend-angular/ ./
+  COPY book-app/ ./
   RUN npm install
   RUN npm run build -- --configuration production
   
@@ -22,13 +22,16 @@
   
   WORKDIR /app
   
-  # Kopiera publicerad backend
+  # Kopiera backend
   COPY --from=backend-build /app/out ./
   
   # Kopiera Angular-build till wwwroot
-  COPY --from=frontend-build /app/frontend/dist/frontend-angular ./wwwroot
+  COPY --from=frontend-build /app/frontend/dist/book-app ./wwwroot
   
+  # Öppna port
   EXPOSE 80
   
+  # Starta din .NET-backend (ändra om din .csproj har annat namn)
   ENTRYPOINT ["dotnet", "TestPraktik.dll"]
+  
   
