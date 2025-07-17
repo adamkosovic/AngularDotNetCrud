@@ -35,8 +35,20 @@ public class Program
             options.AddPolicy("get_book", policy => policy.RequireAuthenticatedUser());
         });
 
-        var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ??
-            "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
+        // Get database connection string from environment variables
+        var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            connectionString = "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
+        }
+        else
+        {
+            // Railway provides DATABASE_URL in format: postgresql://user:pass@host:port/db
+            // Convert to Entity Framework format
+            var uri = new Uri(connectionString);
+            connectionString = $"Host={uri.Host};Database={uri.LocalPath.TrimStart('/')};Username={uri.UserInfo.Split(':')[0]};Password={uri.UserInfo.Split(':')[1]};Port={uri.Port};SSL Mode=Require;Trust Server Certificate=true;";
+        }
 
         Console.WriteLine($"Using connection string: {connectionString}");
 
