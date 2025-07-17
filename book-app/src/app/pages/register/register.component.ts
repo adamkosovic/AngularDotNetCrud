@@ -23,7 +23,7 @@ export class RegisterComponent {
   ) {}
 
   onRegister() {
-    this.http.post('http://localhost:5020/register', {
+    this.http.post('http://localhost:8081/register', {
       email: this.email,
       password: this.password
     }).subscribe({

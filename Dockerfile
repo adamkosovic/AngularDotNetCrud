@@ -26,7 +26,7 @@
   COPY --from=backend-build /app/out ./
   
   # Kopiera Angular-build till wwwroot
-  COPY --from=frontend-build /app/frontend/dist/book-app ./wwwroot
+  COPY --from=frontend-build /app/frontend/dist/book-app/browser ./wwwroot
   
   # Öppna port
   EXPOSE 80
