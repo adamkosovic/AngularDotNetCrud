@@ -94,6 +94,23 @@ public class Program
 
         app.MapControllers();
 
+        // Health check endpoint
+        app.MapGet("/health", () => "OK");
+
+        // Initialize database
+        app.MapGet("/init-db", async (BookDbContext dbContext) =>
+        {
+            try
+            {
+                await dbContext.Database.EnsureCreatedAsync();
+                return "Database initialized successfully";
+            }
+            catch (Exception ex)
+            {
+                return $"Database initialization failed: {ex.Message}";
+            }
+        });
+
         app.MapPost("/register", async (UserManager<User> userManager, RegisterRequest req) =>
         {
             try
