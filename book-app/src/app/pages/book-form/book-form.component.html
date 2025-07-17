@@ -1,50 +1,61 @@
 <div class="container mt-4">
-  <h2>{{ editing ? "Redigera bok" : "Lägg till ny bok" }}</h2>
+  <div class="card shadow-sm rounded-4 border-0">
+    <div class="card-body p-4">
 
-  <form #bookForm="ngForm" (ngSubmit)="onSubmit()">
-    <div class="mb-3">
-      <label for="title" class="form-label">Titel</label>
-      <input
-        type="text"
-        id="title"
-        class="form-control"
-        [(ngModel)]="book.title"
-        name="title"
-        required
-      />
+      <h2 class="mb-4 text-primary text-center">
+        {{ editing ? "✏️ Redigera bok" : "📚 Lägg till ny bok" }}
+      </h2>
+
+      <form #bookForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <div class="mb-3">
+          <label for="title" class="form-label fw-semibold">Titel</label>
+          <input
+            type="text"
+            id="title"
+            class="form-control form-control-lg rounded-3"
+            [(ngModel)]="book.title"
+            name="title"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="author" class="form-label fw-semibold">Författare</label>
+          <input
+            type="text"
+            id="author"
+            class="form-control form-control-lg rounded-3"
+            [(ngModel)]="book.author"
+            name="author"
+            required
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="publishDate" class="form-label fw-semibold">Publiceringsdatum</label>
+          <input
+            type="date"
+            id="publishDate"
+            class="form-control form-control-lg rounded-3"
+            [(ngModel)]="book.publishDate"
+            name="publishDate"
+            required
+          />
+        </div>
+
+        <div class="d-grid">
+          <button
+            class="btn btn-success btn-lg rounded-3"
+            type="submit"
+            [disabled]="!bookForm.form.valid"
+          >
+            <i class="fa me-2" [ngClass]="editing ? 'fa-save' : 'fa-plus'"></i>
+            {{ editing ? "Uppdatera bok" : "Lägg till bok" }}
+          </button>
+        </div>
+
+      </form>
     </div>
-
-    <div class="mb-3">
-      <label for="author" class="form-label">Författare</label>
-      <input
-        type="text"
-        id="author"
-        class="form-control"
-        [(ngModel)]="book.author"
-        name="author"
-        required
-      />
-    </div>
-
-    <div class="mb-3">
-      <label for="publishDate" class="form-label">Publiceringsdatum</label>
-      <input
-        type="date"
-        id="publishDate"
-        class="form-control"
-        [(ngModel)]="book.publishDate"
-        name="publishDate"
-        required
-      />
-    </div>
-
-    <button
-      class="btn btn-success"
-      type="submit"
-      [disabled]="!bookForm.form.valid"
-    >
-      <i class="fa" [ngClass]="editing ? 'fa-save' : 'fa-plus'"></i>
-      {{ editing ? "Uppdatera bok" : "Lägg till bok" }}
-    </button>
-  </form>
+  </div>
 </div>
