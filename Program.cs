@@ -20,13 +20,9 @@ public class Program
             options.AddPolicy("AllowFrontend", policy =>
             {
                 policy
-                    .WithOrigins(
-                        "https://playful-crumble-968db4.netlify.app",
-                        "http://localhost:4200"
-                    )
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                    .AllowAnyMethod();
             });
         });
 
