@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -7,7 +7,7 @@ import { AuthService } from '../../core/auth/auth.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
 })
 export class LoginComponent {
   email: string = '';
@@ -18,12 +18,22 @@ export class LoginComponent {
   onSubmit() {
     this.auth.login({ email: this.email, password: this.password }).subscribe({
       next: () => {
-        this.router.navigateByUrl('/');
+        // Vänta lite innan navigering så token säkert är sparad
+        setTimeout(() => {
+          this.router.navigateByUrl('/');
+        }, 100);
       },
       error: err => {
         console.error('Inloggning misslyckades', err);
         alert('Fel användaruppgifter');
       }
     });
+  }
+
+  ngOnInit() {
+    // Omdirigera om redan inloggad
+    if (this.auth.isLoggedIn()) {
+      this.router.navigateByUrl('/');
+    }
   }
 }

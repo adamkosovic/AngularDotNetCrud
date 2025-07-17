@@ -8,12 +8,14 @@ import { RegisterComponent } from './pages/register/register.component';
 import { QuoteComponent } from './pages/quote/quote.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent /*, canActivate: [AuthGuard] */ },
-  { path: 'login', component: LoginComponent },
-  { path: 'quotes', component: QuoteComponent /*, canActivate: [AuthGuard] */ },
-  { path: 'book-form', component: BookFormComponent /*, canActivate: [AuthGuard] */ },
-  { path: 'book-form/:id', component: BookFormComponent /*, canActivate: [AuthGuard] */ },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'quotes', component: QuoteComponent, canActivate: [AuthGuard] },
+  { path: 'book-form', component: BookFormComponent, canActivate: [AuthGuard] },
+  { path: 'book-form/:id', component: BookFormComponent, canActivate: [AuthGuard] },
+
+  { path: 'login', component: LoginComponent }, 
   { path: 'register', component: RegisterComponent },
+
   { path: '**', redirectTo: '' },
 ];
 

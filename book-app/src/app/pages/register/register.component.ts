@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NgModel, FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -8,7 +8,7 @@ import { AuthService } from '../../core/auth/auth.service';
   selector: 'app-register',
   templateUrl: './register.component.html',
   standalone: true,
-  imports: [FormsModule]
+  imports: [FormsModule, RouterModule]
 })
 export class RegisterComponent {
   email = '';
