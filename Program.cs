@@ -92,8 +92,6 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
-
         // Health check endpoint
         app.MapGet("/health", () => "OK");
 
@@ -164,6 +162,8 @@ public class Program
             }
         })
         .RequireCors("AllowFrontend");
+
+        app.MapControllers();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
