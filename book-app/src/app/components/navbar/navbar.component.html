@@ -16,11 +16,13 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
           <a class="nav-link" routerLink="/" routerLinkActive="active">Hem</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/quotes" routerLinkActive="active">Mina citat</a>
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" routerLink="/quotes" routerLinkActive="active"
+            >Mina citat</a
+          >
         </li>
       </ul>
 
@@ -28,14 +30,17 @@
         <li class="nav-item" *ngIf="!auth.isLoggedIn()">
           <a class="nav-link" routerLink="/login">Logga in</a>
         </li>
-        <li class="nav-item" *ngIf="auth.isLoggedIn()">
-          <a class="nav-link" (click)="logout()">Logga ut</a>
-        </li>
         <li class="nav-item" *ngIf="!auth.isLoggedIn()">
           <a class="nav-link" routerLink="/register">Registrera</a>
         </li>
+        <li class="nav-item" *ngIf="auth.isLoggedIn()">
+          <a class="nav-link" (click)="logout()">Logga ut</a>
+        </li>
         <li class="nav-item">
-          <button class="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0" (click)="toggleTheme()">
+          <button
+            class="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0"
+            (click)="toggleTheme()"
+          >
             <i class="fa" [ngClass]="isDarkMode ? 'fa-sun' : 'fa-moon'"></i>
           </button>
         </li>
