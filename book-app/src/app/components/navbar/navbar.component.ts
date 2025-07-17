@@ -10,7 +10,6 @@ import { NotificationService } from '../../services/notifications/notification.s
   standalone: true,
   imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
 

@@ -11,7 +11,7 @@ import { NotificationService } from '../../services/notifications/notification.s
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './book-form.component.html',
-  styleUrls: ['./book-form.component.css'] // 👈 plural: style**Urls**
+  styleUrls: ['./book-form.component.css']
 })
 export class BookFormComponent implements OnInit {
   book: Book = {
@@ -27,7 +27,7 @@ export class BookFormComponent implements OnInit {
     private bookService: BookService,
     private router: Router,
     private route: ActivatedRoute,
-    private notify: NotificationService // 👈 Lägg till denna
+    private notify: NotificationService 
   ) {}
 
   ngOnInit(): void {
