@@ -20,13 +20,9 @@ public class Program
             options.AddPolicy("AllowFrontend", policy =>
             {
                 policy
-                    .WithOrigins(
-                        "https://rad-strudel-8320dd.netlify.app",
-                        "http://localhost:4200"
-                    )
+                    .AllowAnyOrigin()
                     .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .AllowCredentials();
+                    .AllowAnyMethod();
             });
         });
 
@@ -95,6 +91,16 @@ public class Program
             var result = await userManager.CreateAsync(user, req.Password);
             if (!result.Succeeded)
                 return Results.BadRequest(result.Errors);
+
+            return Results.Ok();
+        })
+        .RequireCors("AllowFrontend");
+
+        app.MapPost("/login", async (SignInManager<User> signInManager, LoginRequest req) =>
+        {
+            var result = await signInManager.PasswordSignInAsync(req.Email, req.Password, false, false);
+            if (!result.Succeeded)
+                return Results.BadRequest("Invalid email or password");
 
             return Results.Ok();
         })
