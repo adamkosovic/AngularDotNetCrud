@@ -23,7 +23,10 @@ public class Program
                 policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "https://chic-platypus-fd77db.netlify.app"
+                        )
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -38,15 +41,19 @@ public class Program
             options.AddPolicy("get_books", policy => policy.RequireAuthenticatedUser());
         });
 
+        // Get database connection string from environment variables
+        var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") ??
+            "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
+
         builder.Services.AddDbContext<BookDbContext>(
-            options => options.UseNpgsql("Host=localhost;Database=bookappdb;Username=postgres;Password=password"
-            )
+            options => options.UseNpgsql(connectionString)
         );
 
         builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
         builder
             .Services.AddIdentityCore<User>()
             .AddEntityFrameworkStores<BookDbContext>()
+            .AddSignInManager()
             .AddApiEndpoints();
         builder.Services.AddControllers();
         builder.Services.AddScoped<BookService>();
@@ -61,8 +68,8 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseDefaultFiles(); 
-        app.UseStaticFiles();  
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
 
         app.MapFallbackToFile("index.html");
 

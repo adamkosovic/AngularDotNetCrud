@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-backend-url.com' // Replace with your actual backend URL
+  apiUrl: 'https://angulardotnetcrud-production.up.railway.app'
 }; 

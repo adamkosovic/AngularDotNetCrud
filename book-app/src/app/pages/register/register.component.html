@@ -14,7 +14,7 @@
         id="email"
         name="email"
         class="form-control"
-        [(ngModel)]="email"
+        [(ngModel)]="user.email"
         required
       />
     </div>
@@ -26,7 +26,23 @@
         id="password"
         name="password"
         class="form-control"
-        [(ngModel)]="password"
+        [(ngModel)]="user.password"
+        required
+      />
+      <div class="form-text">
+        Lösenordet måste innehålla: stor bokstav, liten bokstav, siffra och
+        specialtecken.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="confirmPassword" class="form-label">Bekräfta lösenord</label>
+      <input
+        type="password"
+        id="confirmPassword"
+        name="confirmPassword"
+        class="form-control"
+        [(ngModel)]="user.confirmPassword"
         required
       />
     </div>
