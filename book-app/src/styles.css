@@ -1,13 +1,13 @@
 
 
 
-/* === DARK THEME STYLES === */
+
 body.dark-theme {
   background-color: #1e1e2f;
   color: #e0e0e0;
 }
 
-/* === NAVBAR === */
+
 body.dark-theme .navbar {
   background-color: #2c2c3b !important;
   color: #ffffff;
@@ -19,7 +19,6 @@ body.dark-theme .nav-link {
   color: #f5f5f5 !important;
 }
 
-/* === CONTAINERS & CARDS === */
 body.dark-theme .container,
 body.dark-theme .card,
 body.dark-theme .form-container {
@@ -29,7 +28,7 @@ body.dark-theme .form-container {
   border-radius: 8px;
 }
 
-/* === TEXT HEADINGS === */
+
 body.dark-theme h1,
 body.dark-theme h2,
 body.dark-theme h3,
@@ -37,7 +36,7 @@ body.dark-theme label {
   color: #ffffff;
 }
 
-/* === INPUTS === */
+
 body.dark-theme input,
 body.dark-theme textarea,
 body.dark-theme select {
@@ -50,7 +49,7 @@ body.dark-theme input::placeholder {
   color: #aaa;
 }
 
-/* === BUTTONS === */
+
 body.dark-theme .btn {
   background-color: #5c5c8a;
   color: #ffffff;
@@ -62,7 +61,7 @@ body.dark-theme .btn:hover {
   color: #fff;
 }
 
-/* === TABLES === */
+
 body.dark-theme table {
   background-color: #2a2a3c;
   color: #f0f0f0;
@@ -73,13 +72,8 @@ body.dark-theme table td {
   border-color: #444;
 }
 
-
-
-/* === DARK MODE ENHANCEMENTS === */
-
-/* Länkar */
 body.dark-theme a {
-  color: #9dbbff; /* Ljusblå ton som syns bra */
+  color: #9dbbff; 
 }
 
 body.dark-theme a:hover {
@@ -87,7 +81,6 @@ body.dark-theme a:hover {
   text-decoration: underline;
 }
 
-/* Rubriker */
 body.dark-theme h1,
 body.dark-theme h2,
 body.dark-theme h3,
@@ -97,7 +90,6 @@ body.dark-theme h6 {
   color: #ffffff;
 }
 
-/* Knapp-text */
 body.dark-theme .btn,
 body.dark-theme button {
   color: #ffffff;
@@ -110,7 +102,6 @@ body.dark-theme button:hover {
   background-color: #6773c1;
 }
 
-/* Tabellhuvud och celler */
 body.dark-theme table {
   background-color: #2a2a3c;
   color: #f0f0f0;
