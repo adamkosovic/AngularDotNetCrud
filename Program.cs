@@ -156,7 +156,7 @@ public class Program
                 }
 
                 Console.WriteLine($"User registered successfully: {req.Email}");
-                return Results.Ok();
+                return Results.Ok(new { message = "User registered successfully", email = req.Email });
             }
             catch (Exception ex)
             {
@@ -180,7 +180,7 @@ public class Program
                 }
 
                 Console.WriteLine($"Login successful for: {req.Email}");
-                return Results.Ok();
+                return Results.Ok(new { message = "Login successful", email = req.Email });
             }
             catch (Exception ex)
             {
