@@ -191,17 +191,12 @@ public class Program
                     return Results.BadRequest("User not found");
                 }
 
-                // Generate a Bearer token
-                var token = await userManager.GenerateUserTokenAsync(user, "Default", "book-app");
-
                 Console.WriteLine($"Login successful for: {req.Email}");
                 return Results.Ok(new
                 {
                     message = "Login successful",
                     email = req.Email,
-                    userId = user.Id,
-                    accessToken = token,
-                    tokenType = "Bearer"
+                    userId = user.Id
                 });
             }
             catch (Exception ex)

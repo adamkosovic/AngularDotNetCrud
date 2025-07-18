@@ -19,7 +19,7 @@ public class BookController : ControllerBase
 
 
   [HttpPost("book")]
-  [Authorize("create_book")]
+  [Authorize]  // Use simple authorization instead of policy
   public IActionResult CreateBook([FromBody] CreateBookDto dto)
   {
     try
@@ -43,7 +43,7 @@ public class BookController : ControllerBase
 
 
   [HttpDelete("book/{id}")]
-  [Authorize("remove_book")]
+  [Authorize]  // Use simple authorization instead of policy
   public IActionResult RemoveBook(int id)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -59,7 +59,7 @@ public class BookController : ControllerBase
 
 
   [HttpPut("book/{id}")]
-  [Authorize("update_book")]
+  [Authorize]  // Use simple authorization instead of policy
   public IActionResult UpdateBook(int id, [FromBody] CreateBookDto dto)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -80,7 +80,7 @@ public class BookController : ControllerBase
 
 
   [HttpGet("books")]
-  [Authorize("get_books")]
+  [Authorize]  // Use simple authorization instead of policy
   public List<BookDto> GetAllBooks()
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -88,7 +88,7 @@ public class BookController : ControllerBase
   }
 
   [HttpGet("book/{id}")]
-  [Authorize("get_book")]
+  [Authorize]  // Use simple authorization instead of policy
   public IActionResult GetBookById(int id)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
