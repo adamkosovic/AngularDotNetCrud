@@ -11,7 +11,7 @@ using TestPraktik.Services;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +71,21 @@ public class Program
         builder.Services.AddScoped<BookService>();
 
         var app = builder.Build();
+
+        // Initialize database
+        using (var scope = app.Services.CreateScope())
+        {
+            var dbContext = scope.ServiceProvider.GetRequiredService<BookDbContext>();
+            try
+            {
+                await dbContext.Database.EnsureCreatedAsync();
+                Console.WriteLine("Database initialized successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database initialization failed: {ex.Message}");
+            }
+        }
 
         app.UseExceptionHandler(errorApp =>
         {
