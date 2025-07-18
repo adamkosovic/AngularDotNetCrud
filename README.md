@@ -6,7 +6,7 @@ A full-stack web application for managing books and quotes, built with Angular f
 
 - **User Authentication** - Login and registration system
 - **Book Management** - Create, read, update, and delete books
-- **Quote System** - Save and manage favorite quotes
+- **Quote System** - favorite quotes
 - **Dark Mode** - Toggle between light and dark themes
 - **Responsive Design** - Works on desktop and mobile devices
 
@@ -17,11 +17,10 @@ A full-stack web application for managing books and quotes, built with Angular f
 - **Angular 19** - Modern web framework
 - **Bootstrap 5** - CSS framework for styling
 - **FontAwesome** - Icon library
-- **RxJS** - Reactive programming
 
 ### Backend
 
-- **.NET 9** - Web API framework
+- **.NET 8** - Web API framework
 - **Entity Framework Core** - Database ORM
 - **PostgreSQL** - Database
 - **ASP.NET Core Identity** - Authentication system
