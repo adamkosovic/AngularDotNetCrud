@@ -62,16 +62,26 @@ export class RegisterComponent {
       email: this.user.email,
       password: this.user.password
     }).subscribe({
-      next: (response) => {
+      next: (response: any) => {
         console.log('Registrering lyckades', response);
+        console.log('Response type:', typeof response);
+        console.log('Response status:', response?.status);
+        
+        // Identity API returns null body on successful registration (status 200)
+        // If we reach this point, registration was successful
         alert('Registrering lyckades! Du kan nu logga in.');
         this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error('Registrering misslyckades', error);
+        console.error('Error status:', error.status);
+        console.error('Error message:', error.message);
+        
         if (error.error?.errors) {
           const errorMessages = Object.values(error.error.errors).flat();
           alert('Registrering misslyckades:\n' + errorMessages.join('\n'));
+        } else if (error.status === 404) {
+          alert('Registrering misslyckades: Endpoint hittades inte. Kontrollera API-anslutningen.');
         } else {
           alert('Registrering misslyckades. Försök igen.');
         }
