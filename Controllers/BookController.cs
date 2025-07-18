@@ -25,6 +25,12 @@ public class BookController : ControllerBase
     try
     {
       var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+      if (id == null)
+      {
+        // For testing without authentication, we need to handle this differently
+        return BadRequest("User ID is required. Please log in first.");
+      }
+
       Book book = bookService.CreateBook(dto.Title, dto.Author, dto.PublishDate, id);
 
       BookDto bookDto = new BookDto(book);
