@@ -22,8 +22,7 @@ public class Program
             {
                 policy
                     .WithOrigins(
-                        "https://playful-crumble-968db4.netlify.app",
-                        "https://peppy-pie-f8c8e8.netlify.app",
+                        "https://ownbooklist.netlify.app/login",
                         "http://localhost:4200"
                     )
                     .AllowAnyHeader()
