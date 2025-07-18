@@ -69,8 +69,23 @@ export class RegisterComponent {
         
         // Identity API returns null body on successful registration (status 200)
         // If we reach this point, registration was successful
-        alert('Registrering lyckades! Du kan nu logga in.');
-        this.router.navigate(['/login']);
+        alert('Registrering lyckades! Du loggas in automatiskt.');
+        
+        // Automatically log in the user after successful registration
+        this.auth.login({
+          email: this.user.email,
+          password: this.user.password
+        }).subscribe({
+          next: (loginResponse: any) => {
+            console.log('Automatisk inloggning lyckades', loginResponse);
+            this.router.navigate(['/']); // Navigate to home page
+          },
+          error: (loginError) => {
+            console.error('Automatisk inloggning misslyckades', loginError);
+            // If auto-login fails, redirect to login page
+            this.router.navigate(['/login']);
+          }
+        });
       },
       error: (error) => {
         console.error('Registrering misslyckades', error);
