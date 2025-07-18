@@ -119,6 +119,11 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.MapControllers();
+
+        // Map Identity API endpoints
+        app.MapIdentityApi<User>();
+
         // Health check endpoint
         app.MapGet("/health", () => "OK");
 
@@ -166,7 +171,7 @@ public class Program
         })
         .RequireCors("AllowFrontend");
 
-        app.MapPost("/login", async (SignInManager<User> signInManager, LoginRequest req) =>
+        app.MapPost("/login", async (SignInManager<User> signInManager, UserManager<User> userManager, LoginRequest req) =>
         {
             try
             {
@@ -179,8 +184,20 @@ public class Program
                     return Results.BadRequest("Invalid email or password");
                 }
 
+                // Get the user
+                var user = await userManager.FindByEmailAsync(req.Email);
+                if (user == null)
+                {
+                    return Results.BadRequest("User not found");
+                }
+
                 Console.WriteLine($"Login successful for: {req.Email}");
-                return Results.Ok(new { message = "Login successful", email = req.Email });
+                return Results.Ok(new
+                {
+                    message = "Login successful",
+                    email = req.Email,
+                    userId = user.Id
+                });
             }
             catch (Exception ex)
             {
@@ -189,8 +206,6 @@ public class Program
             }
         })
         .RequireCors("AllowFrontend");
-
-        app.MapControllers();
 
         // Remove static file serving since frontend is on Netlify
         // app.UseDefaultFiles();
