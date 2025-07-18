@@ -60,7 +60,13 @@ public class Program
             options.UseNpgsql(connectionString)
         );
 
-        builder.Services.AddAuthentication().AddBearerToken(IdentityConstants.BearerScheme);
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
+            options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+            options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+        }).AddBearerToken(IdentityConstants.BearerScheme);
+
         builder.Services.AddIdentityCore<User>()
             .AddEntityFrameworkStores<BookDbContext>()
             .AddSignInManager()
