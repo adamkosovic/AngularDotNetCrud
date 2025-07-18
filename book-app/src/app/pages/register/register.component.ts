@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +20,7 @@ export class RegisterComponent {
   };
 
   constructor(
-    private http: HttpClient,
+    private auth: AuthService,
     private router: Router
   ) {}
 
@@ -27,16 +28,16 @@ export class RegisterComponent {
     const errors: string[] = [];
     
     if (!/[A-Z]/.test(password)) {
-      errors.push('Lösenordet måste innehålla minst en stor bokstav (A-Z)');
+      errors.push('Lösenordet måste innehålla minst en stor bokstav');
     }
     if (!/[a-z]/.test(password)) {
-      errors.push('Lösenordet måste innehålla minst en liten bokstav (a-z)');
+      errors.push('Lösenordet måste innehålla minst en liten bokstav');
     }
-    if (!/[0-9]/.test(password)) {
-      errors.push('Lösenordet måste innehålla minst en siffra (0-9)');
+    if (!/\d/.test(password)) {
+      errors.push('Lösenordet måste innehålla minst en siffra');
     }
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      errors.push('Lösenordet måste innehålla minst ett specialtecken (!@#$%^&*)');
+      errors.push('Lösenordet måste innehålla minst ett specialtecken');
     }
     if (password.length < 6) {
       errors.push('Lösenordet måste vara minst 6 tecken långt');
@@ -57,7 +58,7 @@ export class RegisterComponent {
       return;
     }
 
-    this.http.post(`${environment.apiUrl}/register`, {
+    this.auth.register({
       email: this.user.email,
       password: this.user.password
     }).subscribe({

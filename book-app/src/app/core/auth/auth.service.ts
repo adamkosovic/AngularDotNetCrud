@@ -32,6 +32,10 @@ export class AuthService {
     );
   }
 
+  register(userData: { email: string, password: string }) {
+    return this.http.post(`${this.apiUrl}/register`, userData, { withCredentials: true });
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token');
   }

@@ -8,6 +8,7 @@ using TestPraktik.Models;
 using TestPraktik.Dtos;
 using TestPraktik.Data;
 using TestPraktik.Services;
+using System.Text.Json;
 
 public class Program
 {
@@ -22,6 +23,7 @@ public class Program
                 policy
                     .WithOrigins(
                         "https://playful-crumble-968db4.netlify.app",
+                        "https://peppy-pie-f8c8e8.netlify.app",
                         "http://localhost:4200"
                     )
                     .AllowAnyHeader()
@@ -44,7 +46,8 @@ public class Program
 
         if (string.IsNullOrEmpty(connectionString))
         {
-            connectionString = "Host=localhost;Database=bookappdb;Username=postgres;Password=password";
+            var currentUser = Environment.GetEnvironmentVariable("USER") ?? "adamkosovic";
+            connectionString = $"Host=localhost;Database=bookappdb;Username={currentUser};Password=;";
         }
         else
         {
@@ -60,6 +63,7 @@ public class Program
             options.UseNpgsql(connectionString)
         );
 
+        // Simplified authentication setup
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
@@ -77,6 +81,12 @@ public class Program
         builder.Services.Configure<IdentityOptions>(options =>
         {
             options.User.RequireUniqueEmail = true;
+            // Relax password requirements for testing
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequiredLength = 6;
         });
 
         builder.Services.AddControllers();
@@ -107,6 +117,9 @@ public class Program
                 if (error != null)
                 {
                     Console.WriteLine("EXCEPTION: " + error.Error.ToString());
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "application/json";
+                    await context.Response.WriteAsync(JsonSerializer.Serialize(new { error = "Internal server error" }));
                 }
             });
         });
@@ -127,6 +140,9 @@ public class Program
         // Health check endpoint
         app.MapGet("/health", () => "OK");
 
+        // Test endpoint to verify basic functionality
+        app.MapGet("/test", () => new { message = "API is working", timestamp = DateTime.UtcNow });
+
         // Initialize database
         app.MapGet("/init-db", async (BookDbContext dbContext) =>
         {
@@ -140,72 +156,6 @@ public class Program
                 return $"Database initialization failed: {ex.Message}";
             }
         });
-
-        app.MapPost("/register", async (UserManager<User> userManager, RegisterRequest req) =>
-        {
-            try
-            {
-                Console.WriteLine($"Registering user: {req.Email}");
-
-                var user = new User
-                {
-                    Email = req.Email,
-                    UserName = req.Email
-                };
-
-                var result = await userManager.CreateAsync(user, req.Password);
-                if (!result.Succeeded)
-                {
-                    Console.WriteLine($"Registration failed: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-                    return Results.BadRequest(result.Errors);
-                }
-
-                Console.WriteLine($"User registered successfully: {req.Email}");
-                return Results.Ok(new { message = "User registered successfully", email = req.Email });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception in register: {ex.Message}");
-                return Results.Problem(ex.Message);
-            }
-        })
-        .RequireCors("AllowFrontend");
-
-        app.MapPost("/login", async (SignInManager<User> signInManager, UserManager<User> userManager, LoginRequest req) =>
-        {
-            try
-            {
-                Console.WriteLine($"Login attempt for: {req.Email}");
-
-                var result = await signInManager.PasswordSignInAsync(req.Email, req.Password, false, false);
-                if (!result.Succeeded)
-                {
-                    Console.WriteLine($"Login failed for: {req.Email}");
-                    return Results.BadRequest("Invalid email or password");
-                }
-
-                // Get the user
-                var user = await userManager.FindByEmailAsync(req.Email);
-                if (user == null)
-                {
-                    return Results.BadRequest("User not found");
-                }
-
-                Console.WriteLine($"Login successful for: {req.Email}");
-                return Results.Ok(new
-                {
-                    message = "Login successful",
-                    email = req.Email,
-                    userId = user.Id
-                });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception in login: {ex.Message}");
-                return Results.Problem(ex.Message);
-            }
-        })
-        .RequireCors("AllowFrontend");
 
         // Remove static file serving since frontend is on Netlify
         // app.UseDefaultFiles();
