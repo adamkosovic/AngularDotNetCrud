@@ -65,7 +65,9 @@ public class Program
             options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
             options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
             options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
-        }).AddBearerToken(IdentityConstants.BearerScheme);
+        })
+        .AddBearerToken(IdentityConstants.BearerScheme)
+        .AddCookie(IdentityConstants.ApplicationScheme);
 
         builder.Services.AddIdentityCore<User>()
             .AddEntityFrameworkStores<BookDbContext>()
