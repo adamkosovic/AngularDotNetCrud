@@ -19,7 +19,7 @@ public class BookController : ControllerBase
 
 
   [HttpPost("book")]
-  // [Authorize("create_book")]
+  [Authorize("create_book")]
   public IActionResult CreateBook([FromBody] CreateBookDto dto)
   {
     try
@@ -27,8 +27,7 @@ public class BookController : ControllerBase
       var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
       if (id == null)
       {
-        // For testing without authentication, we need to handle this differently
-        return BadRequest("User ID is required. Please log in first.");
+        return Unauthorized("User not authenticated");
       }
 
       Book book = bookService.CreateBook(dto.Title, dto.Author, dto.PublishDate, id);
@@ -44,7 +43,7 @@ public class BookController : ControllerBase
 
 
   [HttpDelete("book/{id}")]
-  // [Authorize("remove_book")]
+  [Authorize("remove_book")]
   public IActionResult RemoveBook(int id)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -60,7 +59,7 @@ public class BookController : ControllerBase
 
 
   [HttpPut("book/{id}")]
-  // [Authorize("update_book")]
+  [Authorize("update_book")]
   public IActionResult UpdateBook(int id, [FromBody] CreateBookDto dto)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -81,7 +80,7 @@ public class BookController : ControllerBase
 
 
   [HttpGet("books")]
-  // [Authorize("get_books")]
+  [Authorize("get_books")]
   public List<BookDto> GetAllBooks()
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -89,7 +88,7 @@ public class BookController : ControllerBase
   }
 
   [HttpGet("book/{id}")]
-  // [Authorize("get_book")]
+  [Authorize("get_book")]
   public IActionResult GetBookById(int id)
   {
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
