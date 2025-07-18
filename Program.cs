@@ -138,7 +138,7 @@ public class Program
         app.MapIdentityApi<User>();
 
         // Health check endpoint
-        app.MapGet("/health", () => "OK");
+        app.MapGet("/health", () => "OK - Updated for Railway deployment");
 
         // Test endpoint to verify basic functionality
         app.MapGet("/test", () => new { message = "API is working", timestamp = DateTime.UtcNow });
