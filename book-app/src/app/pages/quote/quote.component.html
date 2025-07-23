@@ -1,8 +1,37 @@
 <div class="container mt-4">
-  <h2>Mina favoritcitat</h2>
-  <ul class="list-group">
-    <li *ngFor="let quote of quotes" class="list-group-item">
-      <i class="fa fa-quote-left me-2"></i> {{ quote }}
-    </li>
-  </ul>
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+    <h2 class="text-success m-0">💬 Mina favoritcitat</h2>
+    <a routerLink="/add-quote" class="btn btn-success" (click)="navigateToCreateQuote()">
+      <i class="fa fa-plus me-2"></i> Lägg till nytt citat
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover align-middle text-nowrap">
+      <thead class="table-dark">
+        <tr>
+          <th>Citat</th>
+          <th>Författare</th>
+          <th class="text-center">Åtgärder</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quote of quotes">
+          <td>
+            <i class="fa fa-quote-left me-2 text-muted"></i>
+            {{ quote.text }}
+          </td>
+          <td>{{ quote.author }}</td>
+          <td class="text-center">
+            <button class="btn btn-warning btn-sm me-2" [routerLink]="['/quote-form', quote.id]">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="onDeleteQuote(quote.id!)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
