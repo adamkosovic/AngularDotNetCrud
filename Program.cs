@@ -92,7 +92,8 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddScoped<BookService>();
-
+        builder.Services.AddScoped<QuoteService>();
+        
         var app = builder.Build();
 
         // Initialize database
