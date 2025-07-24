@@ -23,7 +23,9 @@ public class BookDbContext : IdentityDbContext<User>
             entity.Property(q => q.Id).HasColumnName("id");
             entity.Property(q => q.Text).HasColumnName("text");
             entity.Property(q => q.Author).HasColumnName("Author ");
-            entity.Property(q => q.CreatedAt).HasColumnName("createdat");
+            entity.Property(q => q.CreatedAt)
+                .HasColumnName("createdat")
+                .HasColumnType("date");
             entity.Property(q => q.UserId).HasColumnName("userid");
             entity.HasOne(q => q.User)
                 .WithMany(u => u.Quotes)
