@@ -18,16 +18,26 @@ export class QuotesListComponent implements OnInit {
     private quotesService: QuotesService,
     private notificationService: NotificationService,
     private router: Router
-  ) {}
+  ) {
+    console.log('QuotesListComponent constructor called');
+  }
 
   ngOnInit(): void {
+    console.log('QuotesListComponent ngOnInit called');
     this.loadQuotes();
   }
 
   loadQuotes(): void {
+    console.log('Loading quotes...');
     this.quotesService.getQuotes().subscribe({
-      next: (data) => (this.quotes = data as Quote[]),
-      error: () => this.notificationService.show('Kunde inte ladda citat.')
+      next: (data) => {
+        console.log('Quotes loaded:', data);
+        this.quotes = data as Quote[];
+      },
+      error: (error) => {
+        console.error('Error loading quotes:', error);
+        this.notificationService.show('Kunde inte ladda citat.', 'danger');
+      }
     });
   }
 
@@ -43,10 +53,10 @@ export class QuotesListComponent implements OnInit {
     if (confirm('Är du säker på att du vill ta bort detta citat?')) {
       this.quotesService.deleteQuote(id).subscribe({
         next: () => {
-          this.notificationService.show('Citatet togs bort.');
+          this.notificationService.show('Citatet togs bort.', 'success');
           this.loadQuotes();
         },
-        error: () => this.notificationService.show('Kunde inte ta bort citatet.')
+        error: () => this.notificationService.show('Kunde inte ta bort citatet.', 'danger')
       });
     }
   }
