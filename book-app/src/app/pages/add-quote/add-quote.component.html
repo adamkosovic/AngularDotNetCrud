@@ -1,0 +1,46 @@
+<div class="container mt-4">
+  <div class="card shadow-sm rounded-4 border-0">
+    <div class="card-body p-4">
+      <h2 class="mb-4 text-success text-center">💬 Lägg till nytt citat</h2>
+
+      <form #quoteForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="text" class="form-label fw-semibold">Citat</label>
+          <textarea
+            id="text"
+            class="form-control form-control-lg rounded-3"
+            [(ngModel)]="quote.text"
+            name="text"
+            rows="4"
+            placeholder="Skriv ditt citat här..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label for="author" class="form-label fw-semibold">Författare</label>
+          <input
+            type="text"
+            id="author"
+            class="form-control form-control-lg rounded-3"
+            [(ngModel)]="quote.author"
+            name="author"
+            placeholder="Författarens namn"
+            required
+          />
+        </div>
+
+        <div class="d-grid">
+          <button
+            class="btn btn-success btn-lg rounded-3"
+            type="submit"
+            [disabled]="!quoteForm.form.valid"
+          >
+            <i class="fa fa-plus me-2"></i>
+            Lägg till citat
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

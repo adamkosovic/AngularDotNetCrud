@@ -5,11 +5,15 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { BookFormComponent } from './pages/book-form/book-form.component';
 import { QuoteComponent } from './pages/quote/quote.component';
+import { AddQuoteComponent } from './pages/add-quote/add-quote.component';
+import { QuoteFormComponent } from './pages/quote-form/quote-form.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [authGuard] },
   { path: 'quotes', component: QuoteComponent, canActivate: [authGuard] },
+  { path: 'add-quote', component: AddQuoteComponent, canActivate: [authGuard] },
+  { path: 'quote-form/:id', component: QuoteFormComponent, canActivate: [authGuard] },
   { path: 'book-form', component: BookFormComponent, canActivate: [authGuard] },
   { path: 'book-form/:id', component: BookFormComponent, canActivate: [authGuard] },
 

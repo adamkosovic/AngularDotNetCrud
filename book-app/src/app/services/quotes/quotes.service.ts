@@ -13,28 +13,27 @@ export interface Quote {
   providedIn: 'root'
 })
 export class QuotesService {
-  private apiUrl = environment.apiUrl + '/api/quotes'; 
+  private apiUrl = environment.apiUrl; 
 
   constructor(private http: HttpClient) {}
 
   getQuotes(): Observable<Quote[]> {
-    return this.http.get<Quote[]>(`${this.apiUrl}/quotes`);
+    return this.http.get<Quote[]>(`${this.apiUrl}/api/quotes`);
   }
 
-
   getQuoteById(id: number): Observable<Quote> {
-    return this.http.get<Quote>(`${this.apiUrl}/quote/${id}`);
+    return this.http.get<Quote>(`${this.apiUrl}/api/quote/${id}`);
   }
 
   addQuote(quote: { text: string; author: string }): Observable<Quote> {
-    return this.http.post<Quote>(`${this.apiUrl}/quote`, quote);
+    return this.http.post<Quote>(`${this.apiUrl}/api/quote`, quote);
   }
 
   updateQuote(id: number, quote: { text: string; author: string }): Observable<Quote> {
-    return this.http.put<Quote>(`${this.apiUrl}/quote/${id}`, quote);
+    return this.http.put<Quote>(`${this.apiUrl}/api/quote/${id}`, quote);
   }
 
   deleteQuote(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/quote/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/api/quote/${id}`);
   }
 }
