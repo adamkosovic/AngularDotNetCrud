@@ -147,6 +147,39 @@ public class Program
         // Test endpoint to verify basic functionality
         app.MapGet("/test", () => new { message = "API is working", timestamp = DateTime.UtcNow });
 
+        // Test quotes table structure
+        app.MapGet("/test-quotes", async (BookDbContext dbContext) =>
+        {
+            try
+            {
+                var connection = dbContext.Database.GetDbConnection();
+                await connection.OpenAsync();
+                using var command = connection.CreateCommand();
+                command.CommandText = @"
+                    SELECT column_name, data_type 
+                    FROM information_schema.columns 
+                    WHERE table_name = 'quotes' 
+                    ORDER BY ordinal_position";
+
+                var columns = new List<object>();
+                using var reader = await command.ExecuteReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    columns.Add(new
+                    {
+                        column = reader.GetString(0),
+                        type = reader.GetString(1)
+                    });
+                }
+
+                return Results.Json(new { columns, message = "Quotes table structure" });
+            }
+            catch (Exception ex)
+            {
+                return Results.Json(new { error = ex.Message, message = "Failed to get table structure" });
+            }
+        });
+
         // Debug endpoint to test database connectivity
         app.MapGet("/debug-db", async (BookDbContext dbContext) =>
         {
