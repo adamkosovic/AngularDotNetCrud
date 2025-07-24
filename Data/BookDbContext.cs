@@ -20,7 +20,9 @@ public class BookDbContext : IdentityDbContext<User>
         modelBuilder.Entity<Quote>(entity =>
         {
             entity.ToTable("quotes");
-            entity.Property(q => q.Id).HasColumnName("id");
+            entity.Property(q => q.Id)
+                .HasColumnName("id")
+                .UseIdentityColumn();
             entity.Property(q => q.Text).HasColumnName("text");
             entity.Property(q => q.Author).HasColumnName("Author ");
             entity.Property(q => q.CreatedAt)
