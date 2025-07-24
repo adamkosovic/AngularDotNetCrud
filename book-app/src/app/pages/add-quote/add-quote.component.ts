@@ -21,16 +21,20 @@ export class AddQuoteComponent {
     private quotesService: QuotesService,
     private router: Router,
     private notify: NotificationService
-  ) {}
+  ) {
+    console.log('🎯 AddQuoteComponent constructor called');
+  }
 
   onSubmit() {
+    console.log('🎯 Submitting quote:', this.quote);
     this.quotesService.addQuote(this.quote).subscribe({
       next: () => {
+        console.log('🎯 Quote added successfully');
         this.notify.show('Citat tillagt', 'success');
         this.router.navigate(['/quotes']);
       },
       error: (err: any) => {
-        console.error('Kunde inte skapa citatet:', err);
+        console.error('🎯 Error adding quote:', err);
         this.notify.show('Kunde inte skapa citatet', 'danger');
       }
     });

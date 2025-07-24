@@ -25,43 +25,58 @@ export class QuoteFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private notify: NotificationService
-  ) {}
+  ) {
+    console.log('🎯 QuoteFormComponent constructor called');
+  }
 
   ngOnInit(): void {
+    console.log('🎯 QuoteFormComponent ngOnInit called');
     const id = this.route.snapshot.paramMap.get('id');
+    console.log('🎯 Route ID parameter:', id);
     if (id) {
       this.editing = true;
       this.quoteId = +id;
+      console.log('🎯 Editing quote with ID:', this.quoteId);
       this.quotesService.getQuoteById(this.quoteId).subscribe({
-        next: (quote: any) => this.quote = quote,
+        next: (quote: any) => {
+          console.log('🎯 Quote loaded for editing:', quote);
+          this.quote = quote;
+        },
         error: (err: any) => {
-          console.error('Kunde inte hämta citatet:', err);
+          console.error('🎯 Error loading quote for editing:', err);
           this.notify.show('Kunde inte hämta citatet', 'danger');
         }
       });
+    } else {
+      console.log('🎯 Creating new quote (no ID provided)');
     }
   }
 
   onSubmit() {
+    console.log('🎯 Submitting quote form:', this.quote);
     if (this.editing && this.quoteId) {
+      console.log('🎯 Updating existing quote');
       this.quotesService.updateQuote(this.quoteId, this.quote).subscribe({
         next: () => {
+          console.log('🎯 Quote updated successfully');
           this.notify.show('Citat uppdaterat', 'success');
           this.router.navigate(['/quotes']);
         },
         error: (err: any) => {
-          console.error('Kunde inte uppdatera citatet:', err);
+          console.error('🎯 Error updating quote:', err);
           this.notify.show('Kunde inte uppdatera citatet', 'danger');
         }
       });
     } else {
+      console.log('🎯 Creating new quote');
       this.quotesService.addQuote(this.quote).subscribe({
         next: () => {
+          console.log('🎯 Quote created successfully');
           this.notify.show('Citat tillagt', 'success');
           this.router.navigate(['/quotes']);
         },
         error: (err: any) => {
-          console.error('Kunde inte skapa citatet:', err);
+          console.error('🎯 Error creating quote:', err);
           this.notify.show('Kunde inte skapa citatet', 'danger');
         }
       });
