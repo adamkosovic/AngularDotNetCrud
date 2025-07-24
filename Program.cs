@@ -1,6 +1,7 @@
 namespace TestPraktik;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
@@ -174,21 +175,21 @@ public class Program
                     }
                 }
 
-                return new
+                return Results.Json(new
                 {
                     canConnect,
                     tables,
                     message = "Database debug info"
-                };
+                });
             }
             catch (Exception ex)
             {
-                return new
+                return Results.Json(new
                 {
                     canConnect = false,
                     error = ex.Message,
                     message = "Database debug failed"
-                };
+                });
             }
         });
 
