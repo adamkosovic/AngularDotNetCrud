@@ -19,11 +19,6 @@ public class BookDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Quote>()
             .ToTable("quotes")
-            .Property(q => q.Id).HasColumnName("id")
-            .Property(q => q.Text).HasColumnName("text")
-            .Property(q => q.Author).HasColumnName("author")
-            .Property(q => q.CreatedAt).HasColumnName("createdat")
-            .Property(q => q.UserId).HasColumnName("userid")
             .HasOne(q => q.User)
             .WithMany(u => u.Quotes)
             .HasForeignKey(q => q.UserId)
