@@ -35,7 +35,9 @@ public class QuoteController : ControllerBase
         {
             // Log the error for debugging
             Console.WriteLine($"Error in CreateQuote: {ex.Message}");
-            return StatusCode(500, new { error = "Database error", details = ex.Message });
+            Console.WriteLine($"Inner Exception: {ex.InnerException?.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            return StatusCode(500, new { error = "Database error", details = ex.Message, inner = ex.InnerException?.Message });
         }
     }
 

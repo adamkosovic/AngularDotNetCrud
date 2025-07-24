@@ -16,7 +16,13 @@ public class QuoteService
 
     public Quote CreateQuote(string text, string author, string userId)
     {
-        var quote = new Quote { Text = text, Author = author, UserId = userId };
+        var quote = new Quote
+        {
+            Text = text,
+            Author = author,
+            UserId = userId,
+            CreatedAt = DateTime.Today // Use today's date since the column is 'date' type
+        };
         db.Quotes.Add(quote);
         db.SaveChanges();
         return quote;
