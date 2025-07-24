@@ -12,15 +12,15 @@ using TestPraktik.Data;
 namespace TestPraktik.Migrations
 {
     [DbContext(typeof(BookDbContext))]
-    [Migration("20250715124028_AddUser")]
-    partial class AddUser
+    [Migration("20250724181218_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.7")
+                .HasAnnotation("ProductVersion", "8.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -157,7 +157,7 @@ namespace TestPraktik.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TestPraktik.Book", b =>
+            modelBuilder.Entity("TestPraktik.Models.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -177,6 +177,7 @@ namespace TestPraktik.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -186,7 +187,37 @@ namespace TestPraktik.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("TestPraktik.User", b =>
+            modelBuilder.Entity("TestPraktik.Models.Quote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Quotes");
+                });
+
+            modelBuilder.Entity("TestPraktik.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -261,7 +292,7 @@ namespace TestPraktik.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TestPraktik.User", null)
+                    b.HasOne("TestPraktik.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -270,7 +301,7 @@ namespace TestPraktik.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TestPraktik.User", null)
+                    b.HasOne("TestPraktik.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -285,7 +316,7 @@ namespace TestPraktik.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TestPraktik.User", null)
+                    b.HasOne("TestPraktik.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,25 +325,40 @@ namespace TestPraktik.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TestPraktik.User", null)
+                    b.HasOne("TestPraktik.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TestPraktik.Book", b =>
+            modelBuilder.Entity("TestPraktik.Models.Book", b =>
                 {
-                    b.HasOne("TestPraktik.User", "User")
+                    b.HasOne("TestPraktik.Models.User", "User")
                         .WithMany("Books")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TestPraktik.User", b =>
+            modelBuilder.Entity("TestPraktik.Models.Quote", b =>
+                {
+                    b.HasOne("TestPraktik.Models.User", "User")
+                        .WithMany("Quotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TestPraktik.Models.User", b =>
                 {
                     b.Navigation("Books");
+
+                    b.Navigation("Quotes");
                 });
 #pragma warning restore 612, 618
         }

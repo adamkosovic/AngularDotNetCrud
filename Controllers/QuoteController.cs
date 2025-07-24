@@ -22,20 +22,39 @@ public class QuoteController : ControllerBase
     // [Authorize]
     public IActionResult CreateQuote([FromBody] CreateQuoteDto dto)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "test-user-id";
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "test-user-id";
 
-        if (userId == null) return Unauthorized();
+            if (userId == null) return Unauthorized();
 
-        var quote = quoteService.CreateQuote(dto.Text, dto.Author, userId);
-        return Ok(new QuoteDto(quote));
+            var quote = quoteService.CreateQuote(dto.Text, dto.Author, userId);
+            return Ok(new QuoteDto(quote));
+        }
+        catch (Exception ex)
+        {
+            // Log the error for debugging
+            Console.WriteLine($"Error in CreateQuote: {ex.Message}");
+            return StatusCode(500, new { error = "Database error", details = ex.Message });
+        }
     }
 
     [HttpGet("quotes")]
     // [Authorize]
-    public List<QuoteDto> GetAllQuotes()
+    public IActionResult GetAllQuotes()
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "test-user-id";
-        return quoteService.GetAllQuotes(userId).Select(q => new QuoteDto(q)).ToList();
+        try
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "test-user-id";
+            var quotes = quoteService.GetAllQuotes(userId).Select(q => new QuoteDto(q)).ToList();
+            return Ok(quotes);
+        }
+        catch (Exception ex)
+        {
+            // Log the error for debugging
+            Console.WriteLine($"Error in GetAllQuotes: {ex.Message}");
+            return StatusCode(500, new { error = "Database error", details = ex.Message });
+        }
     }
 
     [HttpGet("quote/{id}")]

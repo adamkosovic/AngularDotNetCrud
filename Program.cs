@@ -93,7 +93,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddScoped<BookService>();
         builder.Services.AddScoped<QuoteService>();
-        
+
         var app = builder.Build();
 
         // Initialize database
@@ -102,12 +102,13 @@ public class Program
             var dbContext = scope.ServiceProvider.GetRequiredService<BookDbContext>();
             try
             {
-                await dbContext.Database.EnsureCreatedAsync();
-                Console.WriteLine("Database initialized successfully");
+                // Use migrations instead of EnsureCreatedAsync
+                await dbContext.Database.MigrateAsync();
+                Console.WriteLine("Database migrations applied successfully");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Database initialization failed: {ex.Message}");
+                Console.WriteLine($"Database migration failed: {ex.Message}");
             }
         }
 
@@ -145,17 +146,63 @@ public class Program
         // Test endpoint to verify basic functionality
         app.MapGet("/test", () => new { message = "API is working", timestamp = DateTime.UtcNow });
 
+        // Debug endpoint to test database connectivity
+        app.MapGet("/debug-db", async (BookDbContext dbContext) =>
+        {
+            try
+            {
+                // Test if we can connect to the database
+                var canConnect = await dbContext.Database.CanConnectAsync();
+
+                // Check if tables exist
+                var tables = new List<string>();
+                if (canConnect)
+                {
+                    var connection = dbContext.Database.GetDbConnection();
+                    await connection.OpenAsync();
+                    using var command = connection.CreateCommand();
+                    command.CommandText = @"
+                        SELECT table_name 
+                        FROM information_schema.tables 
+                        WHERE table_schema = 'public' 
+                        ORDER BY table_name";
+
+                    using var reader = await command.ExecuteReaderAsync();
+                    while (await reader.ReadAsync())
+                    {
+                        tables.Add(reader.GetString(0));
+                    }
+                }
+
+                return new
+                {
+                    canConnect,
+                    tables,
+                    message = "Database debug info"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    canConnect = false,
+                    error = ex.Message,
+                    message = "Database debug failed"
+                };
+            }
+        });
+
         // Initialize database
         app.MapGet("/init-db", async (BookDbContext dbContext) =>
         {
             try
             {
-                await dbContext.Database.EnsureCreatedAsync();
-                return "Database initialized successfully";
+                await dbContext.Database.MigrateAsync();
+                return "Database migrations applied successfully";
             }
             catch (Exception ex)
             {
-                return $"Database initialization failed: {ex.Message}";
+                return $"Database migration failed: {ex.Message}";
             }
         });
 
