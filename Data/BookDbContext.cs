@@ -17,16 +17,18 @@ public class BookDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<Quote>()
-            .ToTable("quotes")
-            .Property(q => q.Id).HasColumnName("id")
-            .Property(q => q.Text).HasColumnName("text")
-            .Property(q => q.Author).HasColumnName("Author ")
-            .Property(q => q.CreatedAt).HasColumnName("createdat")
-            .Property(q => q.UserId).HasColumnName("userid")
-            .HasOne(q => q.User)
-            .WithMany(u => u.Quotes)
-            .HasForeignKey(q => q.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Quote>(entity =>
+        {
+            entity.ToTable("quotes");
+            entity.Property(q => q.Id).HasColumnName("id");
+            entity.Property(q => q.Text).HasColumnName("text");
+            entity.Property(q => q.Author).HasColumnName("Author ");
+            entity.Property(q => q.CreatedAt).HasColumnName("createdat");
+            entity.Property(q => q.UserId).HasColumnName("userid");
+            entity.HasOne(q => q.User)
+                .WithMany(u => u.Quotes)
+                .HasForeignKey(q => q.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }
