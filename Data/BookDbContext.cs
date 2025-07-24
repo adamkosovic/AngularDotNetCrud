@@ -18,9 +18,10 @@ public class BookDbContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<Quote>()
+            .ToTable("quotes")
             .HasOne(q => q.User)
             .WithMany(u => u.Quotes)
             .HasForeignKey(q => q.UserId)
-            .OnDelete(DeleteBehavior.Cascade);        
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
