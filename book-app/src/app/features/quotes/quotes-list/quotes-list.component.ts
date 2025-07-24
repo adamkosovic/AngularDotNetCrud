@@ -9,7 +9,48 @@ import { Quote } from '../../../models/quote.model';
   selector: 'app-quotes-list',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './quotes-list.component.html'
+  template: `
+    <div class="container mt-4">
+      <div class="alert alert-success">
+        <h2>🎯 QUOTES LIST COMPONENT IS WORKING!</h2>
+        <p>Number of quotes: {{ quotes.length }}</p>
+        <p>Quotes: {{ quotes | json }}</p>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-success m-0">💬 Mina favoritcitat</h2>
+        <button class="btn btn-success btn-lg" (click)="navigateToCreateQuote()">
+          <i class="fa fa-plus me-2"></i> Lägg till nytt citat
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Citat</th>
+              <th>Författare</th>
+              <th class="text-center">Åtgärder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let quote of quotes">
+              <td>{{ quote.text }}</td>
+              <td>{{ quote.author }}</td>
+              <td class="text-center">
+                <button class="btn btn-warning btn-sm me-2" (click)="onEditQuote(quote.id!)">
+                  <i class="fa fa-edit"></i> Redigera
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="onDeleteQuote(quote.id!)">
+                  <i class="fas fa-trash-alt"></i> Ta bort
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `
 })
 export class QuotesListComponent implements OnInit {
   quotes: Quote[] = [];
