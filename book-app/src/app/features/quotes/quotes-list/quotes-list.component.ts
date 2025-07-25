@@ -11,12 +11,6 @@ import { Quote } from '../../../models/quote.model';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="container mt-4">
-      <div class="alert alert-success">
-        <h2>🎯 QUOTES LIST COMPONENT IS WORKING!</h2>
-        <p>Number of quotes: {{ quotes.length }}</p>
-        <p>Quotes: {{ quotes | json }}</p>
-      </div>
-
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="text-success m-0">💬 Mina favoritcitat</h2>
         <button class="btn btn-success btn-lg" (click)="navigateToCreateQuote()">
