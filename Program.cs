@@ -23,8 +23,7 @@ public class Program
             {
                 policy
                     .WithOrigins(
-                        "https://animated-peony-bd129e.netlify.app/",
-                        "https://bookquote-app.netlify.app",
+                        "https://quotebook-app.netlify.app",
                         "http://localhost:4200"
                     )
                     .AllowAnyHeader()
