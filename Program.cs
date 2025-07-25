@@ -23,6 +23,8 @@ public class Program
             {
                 policy
                     .WithOrigins(
+                        "https://serene-pudding-2024c3.netlify.app",
+                        "https://serene-pudding-2024c3.netlify.app/register",
                         "https://playful-crumble-968db4.netlify.app",
                         "https://peppy-pie-f8c8e8.netlify.app",
                         "https://ownbooklist.netlify.app",
