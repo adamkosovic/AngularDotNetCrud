@@ -49,6 +49,16 @@ import { Quote } from '../../../models/quote.model';
 export class QuotesListComponent implements OnInit {
   quotes: Quote[] = [];
 
+  readonly staticQuotes: Quote[] = [
+    { id: 2001, text: 'Varje dag är en ny chans att börja om.', author: 'Oprah Winfrey' },
+    { id: 2002, text: 'Du är starkare än du tror.', author: 'Walt Disney' },
+    { id: 2003, text: 'Små steg leder till stora förändringar.', author: 'Okänd' },
+    { id: 2004, text: 'Tänk positivt – det gör skillnad.', author: 'Dalai Lama' },
+    { id: 2005, text: 'Tro på dig själv, det är där allt börjar.', author: 'Norman Vincent Peale' }
+  ];
+  
+
+
   constructor(
     private quotesService: QuotesService,
     private notificationService: NotificationService,
@@ -68,7 +78,7 @@ export class QuotesListComponent implements OnInit {
     this.quotesService.getQuotes().subscribe({
       next: (data) => {
         console.log('🎯 Quotes loaded successfully:', data);
-        this.quotes = data as Quote[];
+        this.quotes = [...this.staticQuotes, ...(data as Quote[])];
         console.log('🎯 Quotes array updated:', this.quotes);
       },
       error: (error) => {
