@@ -32,12 +32,14 @@ import { Quote } from '../../../models/quote.model';
               <td>{{ quote.text }}</td>
               <td>{{ quote.author }}</td>
               <td class="text-center">
-                <button class="btn btn-warning btn-sm me-2" (click)="onEditQuote(quote.id!)">
-                  <i class="fa fa-edit"></i> Redigera
-                </button>
-                <button class="btn btn-danger btn-sm" (click)="onDeleteQuote(quote.id!)">
-                  <i class="fas fa-trash-alt"></i> Ta bort
-                </button>
+                <ng-container *ngIf="!quote.isStatic">
+                  <button class="btn btn-warning btn-sm me-2" (click)="onEditQuote(quote.id!)">
+                    <i class="fa fa-edit"></i> Redigera
+                  </button>
+                  <button class="btn btn-danger btn-sm" (click)="onDeleteQuote(quote.id!)">
+                    <i class="fas fa-trash-alt"></i> Ta bort
+                  </button>
+                </ng-container>
               </td>
             </tr>
           </tbody>
@@ -50,11 +52,11 @@ export class QuotesListComponent implements OnInit {
   quotes: Quote[] = [];
 
   readonly staticQuotes: Quote[] = [
-    { id: 2001, text: 'Varje dag är en ny chans att börja om.', author: 'Oprah Winfrey' },
-    { id: 2002, text: 'Du är starkare än du tror.', author: 'Walt Disney' },
-    { id: 2003, text: 'Små steg leder till stora förändringar.', author: 'Okänd' },
-    { id: 2004, text: 'Tänk positivt – det gör skillnad.', author: 'Dalai Lama' },
-    { id: 2005, text: 'Tro på dig själv, det är där allt börjar.', author: 'Norman Vincent Peale' }
+    { id: 2001, text: 'Varje dag är en ny chans att börja om.', author: 'Oprah Winfrey', isStatic: true },
+    { id: 2002, text: 'Du är starkare än du tror.', author: 'Walt Disney', isStatic: true },
+    { id: 2003, text: 'Små steg leder till stora förändringar.', author: 'Okänd', isStatic: true },
+    { id: 2004, text: 'Tänk positivt – det gör skillnad.', author: 'Dalai Lama', isStatic: true },
+    { id: 2005, text: 'Tro på dig själv, det är där allt börjar.', author: 'Norman Vincent Peale', isStatic: true }
   ];
   
 
